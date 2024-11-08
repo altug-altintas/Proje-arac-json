@@ -1,0 +1,67 @@
+﻿@model UserUpdateDTO
+
+<div class="row">
+
+    <div class="card col-md-8 offset-2">
+        <div class="card-body">
+            <div class="card-header  bg-info text-white text-center   py-2 ">
+                <h2> User Update Panel</h2>
+            </div>
+
+            <div class="card-body">
+                <form asp-action="Setting" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label asp-for="FirstName">Adı</label>
+                        <input asp-for="FirstName" type="text" class="form-control" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="LastName">Soyadı</label>
+                        <input asp-for="LastName" type="text" class="form-control" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email">E-Mail</label>
+                        <input asp-for="Email" type="text" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="UserName">Kullanıcı Adı</label>
+                        <input asp-for="UserName" type="text" class="form-control" />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Password">Şifre</label>
+                        <input asp-for="Password" type="text" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ImagePath">Profil Resmi</label>
+                        <br />
+                        <img src="@Model.ImagePath" alt="Profil Resmi" class="img-fluid" />
+                        <br /><br />
+                        <input asp-for="Image" type="file" class="form-control" />
+                        <span asp-validation-for="Image" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Kaydet" class="btn btn-success" />
+                    </div>
+                    <div class="form-group">
+                        <a asp-action="Delete" class="btn btn-danger">Pasif yap</a>
+                    </div>
+
+
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        var emailError = ViewData.ModelState["Email"]?.Errors.FirstOrDefault();
+                        var emailError1 = ViewData.ModelState["UserName"]?.Errors.FirstOrDefault();
+
+                    }
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>

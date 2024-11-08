@@ -1,0 +1,200 @@
+﻿@model IEnumerable<IslemDListVM>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Malzeme Fiyatı</th>
+            <th>İşçilik Fiyatı</th>
+            <th>Toplam Fiyat</th>
+            <th>Açıklama</th>
+            <th>İşlem Türü</th>
+            <th>Bakım KM</th>
+            <th>Araç ID</th>
+            <th>Firma Sahis ID</th>
+            <th>Araç Plaka</th>
+            <th>Firma Adı</th>
+            <th>İşlemler</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ID</td>
+                <td>@item.MalzemeFiyat</td>
+                <td>@item.IscilikFiyat</td>
+                <td>@item.ToplamFiyat</td>
+                <td>@item.IslemAciklama</td>
+                <td>@item.IslemTur</td>
+                <td>@item.BakimKM</td>
+                <td>@item.AracId</td>
+                <td>@item.FirmaSahisId</td>
+                <td>@item.AracPlaka</td>
+                <td>@item.FirmaAd</td>
+                <td>
+                    <button class="btn btn-danger deleteButton" data-id="@item.ID">Sil</button>
+
+                    <button class="btn btn-warning updateButton"
+                            data-id="@item.ID"
+                            data-malzemefiyat="@item.MalzemeFiyat"
+                            data-iscilikfiyat="@item.IscilikFiyat"
+                            data-islemaciklama="@item.IslemAciklama">
+                        Güncelle
+                    </button>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<!-- Güncelleme Modali -->
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateModalLabel">İşlem Güncelle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="updateForm">
+                    <input type="hidden" id="updateID" name="ID" />
+
+                    <div class="form-group">
+                        <label for="malzemeFiyat">Malzeme Fiyatı</label>
+                        <input type="number" class="form-control" id="malzemeFiyat" name="MalzemeFiyat" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="iscilikFiyat">İşçilik Fiyatı</label>
+                        <input type="number" class="form-control" id="iscilikFiyat" name="IscilikFiyat" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="toplamFiyat">Toplam Fiyat</label>
+                        <input type="number" class="form-control" id="toplamFiyat" name="ToplamFiyat" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="islemAciklama">İşlem Açıklaması</label>
+                        <textarea class="form-control" id="islemAciklama" name="islemAciklama" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bakimKM">Bakım KM</label>
+                        <input type="number" class="form-control" id="bakimKM" name="BakimKM" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="islemTur">İşlem Türü</label>
+                        <input type="text" class="form-control" id="islemTur" name="islemTur" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="aracId">Araç ID</label>
+                        <input type="number" class="form-control" id="aracId" name="AracId" required />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                <button type="button" class="btn btn-primary" id="saveChangesButton">Değişiklikleri Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Silme işlemi
+        $('.deleteButton').click(function () {
+            var islemDId = $(this).data('id'); // Butondan ID'yi al          
+            if (confirm("Bu işlemi silmek istediğinizden emin misiniz?")) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/Member/Islem/DeleteIslemD/' + islemDId, // Silme URL'si
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        if (response.success) {
+                            // Satırı tabloda kaldır
+                            $('tr[data-id="' + islemDId + '"]').remove();
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Bir hata oluştu: ' + error);
+                    }
+                });
+            }
+        });
+
+
+
+        $(document).on('click', '.updateButton', function () {
+            // Güncelle butonuna basıldığında verileri modal alanlarına doldur
+            var id = $(this).data('id');
+            var malzemeFiyat = $(this).data('malzemefiyat');
+            var iscilikFiyat = $(this).data('iscilikfiyat');
+            var toplamFiyat = $(this).data('toplamfiyat');
+            var islemAciklama = $(this).data('islemaciklama');
+            var bakimKM = $(this).data('bakimkm');
+            var islemTur = $(this).data('islemtur');
+            var aracId = $(this).data('aracid');
+
+            // Modal içindeki input alanlarını doldur
+            $('#updateID').val(id);
+            $('#malzemeFiyat').val(malzemeFiyat);
+            $('#iscilikFiyat').val(iscilikFiyat);
+            $('#toplamFiyat').val(toplamFiyat);
+            $('#islemAciklama').val(islemAciklama);
+            $('#bakimKM').val(bakimKM);
+            $('#islemTur').val(islemTur);
+            $('#aracId').val(aracId);
+
+            // Modalı aç
+            $('#updateModal').modal('show');
+        });
+
+        $('#saveChangesButton').click(function () {
+            var formData = {
+                ID: $('#updateID').val(),
+                MalzemeFiyat: $('#malzemeFiyat').val(),
+                IscilikFiyat: $('#iscilikFiyat').val(),
+                ToplamFiyat: $('#toplamFiyat').val(),
+                islemAciklama: $('#islemAciklama').val(),
+                BakimKM: $('#bakimKM').val(),
+                islemTur: $('#islemTur').val(),
+                AracId: $('#aracId').val()
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '/Member/Islem/UpdateIslemD',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function (response) {
+                    if (response.success) {
+                        $('#updateModal').modal('hide');  // Modalı kapat
+                        location.reload();  // Sayfayı yenile
+                    } else {
+                        alert("Güncelleme başarısız: " + response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert('Bir hata oluştu: ' + error);
+                }
+            });
+        });
+
+
+
+
+    });
+
+</script>

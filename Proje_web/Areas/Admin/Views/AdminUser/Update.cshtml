@@ -1,0 +1,45 @@
+﻿@model AppUser
+
+
+<div class="row">
+    <div class="card col-md-8 offset-2">
+        <div class="card-text">User Update Panel</div>
+        <div class="card-body">
+            <form asp-action="Update" method="post">
+                <div class="form-group">
+                    <label asp-for="FirstName"></label>
+                    <input asp-for="FirstName" type="text" class="form-control" />
+                    
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastName"></label>
+                    <input asp-for="LastName" type="text" class="form-control" />
+                    
+                </div>
+               
+                <div class="form-group">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" type="text" class="form-control" />
+
+                </div>
+
+                <div class="form-group">
+
+                    <input asp-for="Id" type="hidden" />
+
+                </div>
+                <div class="form-group">
+
+                    <input type="submit" value="Kaydet" class="btn btn-success" />
+
+                </div>
+
+
+            </form>
+        </div>
+
+    </div>
+
+
+
+</div>

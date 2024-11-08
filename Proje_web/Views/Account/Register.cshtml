@@ -1,0 +1,54 @@
+﻿@model RegisterDTO
+
+<div class="row">
+    <div class="card-header col-md-8 bg-info text-white text-center  offset-2 py-2 ">
+        <h2> Kişi Kayıt Paneli</h2>
+    </div>
+    <div class="card col-md-8 offset-2">
+        
+        <div class="card-body">
+            <form asp-action="Register" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label asp-for="FirstName"></label>
+                    <input asp-for="FirstName" type="text" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastName"></label>
+                    <input asp-for="LastName" type="text" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserName"></label>
+                    <input asp-for="UserName" type="text" class="form-control" />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" type="email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" type="password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Image"></label>
+                    <input asp-for="Image" type="file" class="form-control" />
+                    <span asp-validation-for="Image" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-success" value="KAYIT OL " />
+                </div>
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    var emailError = ViewData.ModelState["Email"]?.Errors.FirstOrDefault();
+                    var emailError1 = ViewData.ModelState["UserName"]?.Errors.FirstOrDefault();
+                    
+                }
+
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,64 @@
+﻿@model List<FirmaSahisDto>
+
+@{
+    ViewBag.Title = "Firma Sahis Listesi";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Yeni Firma Sahis Ekle</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+
+            <th>Adi</th>
+            <th>Adres</th>
+            <th>Telefon</th>
+            <th>Email</th>
+            <th>Vergi No</th>
+            <th>Vergi Dairesi</th>
+            <th>TC</th>
+            <th>Posta No</th>
+            <th>Firma Tür</th>
+            <th>Ülke</th>
+            <th>Şehir</th>
+            <th>Güncelle</th>
+            <th>Durum</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>@item.Adi</td>
+                <td>@item.Adres</td>
+                <td>@item.Telefon</td>
+                <td>@item.Email</td>
+                <td>@item.VergiNo</td>
+                <td>@item.VergiDairesi</td>
+                <td>@item.TC</td>
+                <td>@item.PostaNo</td>
+                <td>@item.Tur</td>
+                <td>@item.UlkeId</td>
+                <td>@item.SehirId</td>
+                <td>
+                    <a asp-action="FirmaUpdate" asp-route-id="@item.ID" class="btn btn-warning">Düzenle</a>
+                </td>
+                <td>
+                    @if (item.Statu == Proje_model.Models.Enums.Statu.Active || item.Statu == Proje_model.Models.Enums.Statu.Modified)
+                    {
+                        <a asp-action="FirmaSahisPasif" asp-route-id="@item.ID" class="btn btn-danger">Pasif yap</a>
+                    }
+                    else if (item.Statu == Proje_model.Models.Enums.Statu.Passive)
+                    {
+                        <a asp-action="FirmaSahisAktif" asp-route-id="@item.ID" class="btn btn-danger">Aktif yap</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

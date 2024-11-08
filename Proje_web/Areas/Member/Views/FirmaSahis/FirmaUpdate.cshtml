@@ -1,0 +1,103 @@
+﻿@model FirmaSahisUpdateDTO
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+
+@{
+    ViewBag.Title = "Firma Sahis Güncelle";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<form asp-action="FirmaUpdate" method="post">
+    <div class="form-group">
+        <label asp-for="Adi" class="control-label"></label>
+        <input asp-for="Adi" class="form-control" />
+        <span asp-validation-for="Adi" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Adres" class="control-label"></label>
+        <input asp-for="Adres" class="form-control" />
+        <span asp-validation-for="Adres" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Telefon" class="control-label"></label>
+        <input asp-for="Telefon" class="form-control" />
+        <span asp-validation-for="Telefon" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Email" class="control-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="VergiNo" class="control-label"></label>
+        <input asp-for="VergiNo" class="form-control" />
+        <span asp-validation-for="VergiNo" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="VergiDairesi" class="control-label"></label>
+        <input asp-for="VergiDairesi" class="form-control" />
+        <span asp-validation-for="VergiDairesi" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TC" class="control-label"></label>
+        <input asp-for="TC" class="form-control" />
+        <span asp-validation-for="TC" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PostaNo" class="control-label"></label>
+        <input asp-for="PostaNo" class="form-control" />
+        <span asp-validation-for="PostaNo" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Tur">Firma Türü</label>
+        @Html.DropDownListFor(model => model.Tur,
+                 new SelectList(new[]
+                 {
+        new SelectListItem { Value = "", Text = "Seçiniz" }, // İlk seçenek
+        new SelectListItem { Value = "Sahis", Text = "Sahis" },
+        new SelectListItem { Value = "Firma", Text = "Firma" }
+        }, "Value", "Text", Model.Tur), // Seçili durumu burada ayarlandı
+                 null, // Burada üçüncü parametre olan "Seçiniz" değeri kaldırıldı
+                 new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Tur)
+    </div>
+
+
+
+
+    <div class="form-group">
+        <label for="UlkeId">Ülke</label>
+        <select asp-for="UlkeId" class="form-control">
+            <option value="">Seçiniz</option>
+            @foreach (var ulke in Model.Ulkeler)
+            {
+                <option value="@ulke.Value">@ulke.Text</option>
+            }
+        </select>
+        <span asp-validation-for="UlkeId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="SehirId">Şehir</label>
+        <select asp-for="SehirId" class="form-control">
+            <option value="">Seçiniz</option>
+            @foreach (var sehir in Model.Sehirler)
+            {
+                <option value="@sehir.Value">@sehir.Text</option>
+            }
+        </select>
+        <span asp-validation-for="SehirId" class="text-danger"></span>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Güncelle</button>
+</form>

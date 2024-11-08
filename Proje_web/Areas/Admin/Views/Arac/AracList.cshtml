@@ -1,0 +1,49 @@
+﻿<form method="get" asp-action="AracList">
+    <div class="form-group">
+        <label for="firmaSahisId">Firma Seçiniz:</label>
+        <select name="firmaSahisId" class="form-control" id="firmaSahisId">
+            <option value="">Tümü</option>
+            @foreach (var firma in ViewBag.FirmaSahisler)
+            {
+                <option value="@firma.Value">@firma.Text</option>
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Filtrele</button>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Plaka</th>
+            <th>Marka</th>
+            <th>Model</th>
+            <th>Yakıt Türü</th>
+            <th>Yıl</th>
+            <th>KM</th
+            <th>Bakım KM</th>
+            <th>Son Bakım Tarihi</th>
+            <th>Gelecek Bakım Tarihi</th>
+            <th>Firma Sahis</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var arac in Model)
+        {
+            <tr>
+                <td>@arac.Plaka</td>
+                <td>@arac.Marka</td>
+                <td>@arac.Model</td>
+                <td>@arac.YakitTur</td>
+                <td>@arac.Yil</td>
+                <td>@arac.Km</td>
+                <td>@arac.BakimKM</td>
+                <td>@arac.SonBakim</td>
+                <td>@arac.SiradakiBakim</td>
+                <td>@arac.FirmaSahis?.Adi</td>
+
+
+            </tr>
+        }
+    </tbody>
+</table>

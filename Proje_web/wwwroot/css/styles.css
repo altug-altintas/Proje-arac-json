@@ -1,0 +1,9 @@
+﻿.form-control {
+    font-size: 14px; /* Yazı punto boyutunu küçült */
+    padding: 10px; /* İç boşluğu artır */
+    min-width: 150px; /* Minimum genişlik belirle */
+}
+
+.table input {
+    width: 100%; /* Genişliği %100 yap */
+}

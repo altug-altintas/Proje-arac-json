@@ -1,0 +1,67 @@
+﻿@model List<AppUser>
+
+
+<div class="row">
+    <div class="card col-md-8 offset-2">
+        <div class="card-body">
+            <div class="card-text">Personel Paneli</div>
+
+            <h4>Aktif Kullanıcılar</h4>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Personel Adı</th>
+                        <th>Personel Soyadı</th>
+                        <th>Durumu</th>
+                        <th>Şifre</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Where(u => u.Statu == Proje_model.Models.Enums.Statu.Active || u.Statu == Proje_model.Models.Enums.Statu.Modified))
+                    {
+                        <tr>
+                            <td>@item.FirstName</td>
+                            <td>@item.LastName</td>
+                            <td>@item.Statu</td>
+                            <td>@item.Password</td>
+                            <td>
+                                <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-success">Güncelle</a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Pasif yap</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <h4>Pasif Kullanıcılar</h4>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Personel Adı</th>
+                        <th>Personel Soyadı</th>
+                        <th>Durumu</th>
+                        <th>Şifre</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Where(u => u.Statu == Proje_model.Models.Enums.Statu.Passive))
+                    {
+                        <tr>
+                            <td>@item.FirstName</td>
+                            <td>@item.LastName</td>
+                            <td>@item.Statu</td>
+                            <td>@item.Password</td>
+                            <td>
+                                <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-success">Güncelle</a>
+                                <a asp-action="Active" asp-route-id="@item.Id" class="btn btn-danger">Aktif Yap</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

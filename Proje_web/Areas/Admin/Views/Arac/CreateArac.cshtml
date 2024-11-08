@@ -1,0 +1,83 @@
+﻿@model Proje_web.Areas.Admin.Models.DTOs.AracCreateDTO
+
+<h2>Yeni Araç Ekle</h2>
+
+<form asp-action="CreateArac" method="post">
+    <div class="form-group">
+        <label for="Plaka">Plaka</label>
+        <input type="text" asp-for="Plaka" class="form-control" required />
+        <span asp-validation-for="Plaka" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Marka">Marka</label>
+        <input type="text" asp-for="Marka" class="form-control" required />
+        <span asp-validation-for="Marka" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Model">Model</label>
+        <input type="text" asp-for="Model" class="form-control" required />
+        <span asp-validation-for="Model" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Yil">Yıl</label>
+        <input type="number" asp-for="Yil" class="form-control" required />
+        <span asp-validation-for="Yil" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="SasiNo">Şasi No</label>
+        <input type="text" asp-for="SasiNo" class="form-control" required />
+        <span asp-validation-for="SasiNo" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="YakitTur">Yakıt Türü</label>
+        <input type="text" asp-for="YakitTur" class="form-control" />
+        <span asp-validation-for="YakitTur" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Renk">Renk</label>
+        <input type="text" asp-for="Renk" class="form-control" />
+        <span asp-validation-for="Renk" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="MotorHacim">Motor Hacim</label>
+        <input type="number" asp-for="MotorHacim" class="form-control" />
+        <span asp-validation-for="MotorHacim" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="MotorBeygir">Motor Beygir</label>
+        <input type="number" asp-for="MotorBeygir" class="form-control" />
+        <span asp-validation-for="MotorBeygir" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Km">Kilometre</label>
+        <input type="number" asp-for="Km" class="form-control" />
+        <span asp-validation-for="Km" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="FirmaSahisId"></label>
+        <select asp-for="FirmaSahisId" class="form-control" asp-items="Model.FirmaSahisler">
+            <option value="">Seçiniz</option>
+        </select>
+    </div>
+
+
+
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+    <a asp-action="Index" class="btn btn-secondary">Geri Dön</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
