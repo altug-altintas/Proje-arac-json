@@ -82,7 +82,7 @@ namespace Proje_web.Controllers
 
             return Json(dTO);
         }
-
+                //deneme
         [AllowAnonymous]
         public IActionResult Login(string returnUrl)  //kişinin ulaşmak istediği sayfa 
         {
