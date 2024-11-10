@@ -24,7 +24,7 @@ namespace Proje_web.Controllers
             _project = project;
             _userManager = userManager;
         }
-
+        //Deneme branch
 
        
     }
