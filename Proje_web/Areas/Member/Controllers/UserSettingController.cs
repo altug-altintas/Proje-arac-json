@@ -16,41 +16,56 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Proje_web.Areas.Member.Models.VMs;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Security.Claims;
 
 namespace Proje_web.Areas.Member.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Area("Member")]
     public class UserSettingController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
-        
+
         private readonly IMapper _mapper;
         private readonly ProjectContext _project;
-       
+
         private readonly IAppUserRepo _userRepo;
         private readonly SignInManager<AppUser> _signInManager;
 
-        public UserSettingController(UserManager<AppUser> userManager, IMapper mapper, ProjectContext project,  IAppUserRepo userRepo, SignInManager<AppUser> signInManager)
+        public UserSettingController(UserManager<AppUser> userManager, IMapper mapper, ProjectContext project, IAppUserRepo userRepo, SignInManager<AppUser> signInManager)
         {
             _userManager = userManager;
-           
+
             _mapper = mapper;
             _project = project;
-            
+
             _userRepo = userRepo;
             _signInManager = signInManager;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Setting(int id)
+        public async Task<IActionResult> Setting()
         {
-            AppUser appUser = await _userManager.GetUserAsync(User);
 
-            var updateuser = _mapper.Map<UserUpdateDTO>(appUser);
+            var userId = User.FindFirstValue(ClaimTypes.Name);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
 
 
-            return View(updateuser);
+            var appUser = await _userManager.FindByIdAsync(userId);
 
+            if (appUser == null)
+            {
+                return NotFound();
+            }
+
+            var updateUser = _mapper.Map<UserUpdateDTO>(appUser);
+
+            return Json(updateUser);
 
         }
 
@@ -102,7 +117,7 @@ namespace Proje_web.Areas.Member.Controllers
                 var updateResult = await _userManager.UpdateAsync(appUser);
 
 
-              //  return RedirectToAction("Setting");
+                //  return RedirectToAction("Setting");
                 return Json(new { success = true, redirectUrl = Url.Action("Setting") });
 
 
@@ -141,7 +156,7 @@ namespace Proje_web.Areas.Member.Controllers
 
                 var updateResult = await _userManager.UpdateAsync(appUser);
 
-               // return RedirectToAction("Setting");
+                // return RedirectToAction("Setting");
                 return Json(new { success = true, redirectUrl = Url.Action("Setting") });
 
 
@@ -201,7 +216,7 @@ namespace Proje_web.Areas.Member.Controllers
                         await _signInManager.SignOutAsync();
 
                         // Başarılı işlem
-                       // return RedirectToAction("LogOut");
+                        // return RedirectToAction("LogOut");
                         return Json(new { success = true, redirectUrl = Url.Action("LogOut") });
 
                     }

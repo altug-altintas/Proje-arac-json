@@ -108,9 +108,11 @@ namespace Proje_web
                     ValidateIssuerSigningKey = true, // farklý algoritma dönüþebilsin mi evet
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateAudience = false,  //alýnan token kendine has olsun baþkalarýyla paylaþýlmasýn
-                    ValidateIssuer = false    // alýnantoken hedefe yönelik olsun
+                    ValidateIssuer = false ,
+                    ValidateLifetime = true,
                 };
             });
+            services.AddAuthorization();
 
         }
 

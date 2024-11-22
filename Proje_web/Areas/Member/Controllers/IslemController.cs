@@ -14,9 +14,11 @@ using Proje_model.Models.Enums;
 using Proje_web.Areas.Member.Models.VMs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Proje_web.Areas.Member.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Area("Member")]
     public class IslemController : Controller
     {
