@@ -108,6 +108,31 @@ namespace Proje_web.Areas.Member.Controllers
 
 
 
+        [HttpPost]
+        public IActionResult AracPasif([FromBody] int ID)
+        {          
 
+            var arac = _aracRepo.GetDefault(a => a.ID == ID);
+            if (arac == null)
+            {
+                return Json(new { success = false, message = "İşlem bulunamadı." });
+            }
+
+            _aracRepo.Delete(arac);
+            return Json(new { success = true });
+        }   
+         [HttpPost]
+        public IActionResult AracAktif([FromBody] int ID)
+        {          
+
+            var arac = _aracRepo.GetDefault(a => a.ID == ID);
+            if (arac == null)
+            {
+                return Json(new { success = false, message = "İşlem bulunamadı." });
+            }
+
+            _aracRepo.Active(arac);
+            return Json(new { success = true });
+        }  
     }
 }
