@@ -1,4 +1,4 @@
-using Proje_web.Models.AutoMappers;
+ï»¿using Proje_web.Models.AutoMappers;
 using Proje_Dal.Context;
 using Proje_Dal.Repositories.Abstract;
 using Proje_Dal.Repositories.Concrete;
@@ -39,9 +39,9 @@ namespace Proje_web
 
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowLocalhost5173", builder =>
+                options.AddPolicy("AllowLocalhost5175", builder =>
                 {
-                    builder.WithOrigins("http://localhost:5173")
+                    builder.WithOrigins("http://localhost:5175")
                            .AllowAnyMethod()
                            .AllowAnyHeader()
                            .AllowCredentials();
@@ -54,15 +54,15 @@ namespace Proje_web
                 (
                     x =>
                     {
-                        x.User.RequireUniqueEmail = true;    //kiþiye ait mail adresi eþsiz olcak 
-                        x.Password.RequiredLength = 4;    // þifre karakter sayýsý
-                        x.Password.RequireLowercase = false;   // küçük harf zorunluluðu olsun olmasýn
-                        x.Password.RequireUppercase = false;   // büyük harf zorlunluðu olsun olmasn
-                        x.Password.RequireNonAlphanumeric = false;   // þifrede örneðin !, @, #, $, vb. gibi özel karakterler olsun olmasýn
-                        x.Password.RequireDigit = false;    // en az bir sayý olsun olmasn
+                        x.User.RequireUniqueEmail = true;    //kiÃ¾iye ait mail adresi eÃ¾siz olcak 
+                        x.Password.RequiredLength = 4;    // Ã¾ifre karakter sayÃ½sÃ½
+                        x.Password.RequireLowercase = false;   // kÃ¼Ã§Ã¼k harf zorunluluÃ°u olsun olmasÃ½n
+                        x.Password.RequireUppercase = false;   // bÃ¼yÃ¼k harf zorlunluÃ°u olsun olmasn
+                        x.Password.RequireNonAlphanumeric = false;   // Ã¾ifrede Ã¶rneÃ°in !, @, #, $, vb. gibi Ã¶zel karakterler olsun olmasÃ½n
+                        x.Password.RequireDigit = false;    // en az bir sayÃ½ olsun olmasn
                         x.Password.RequiredUniqueChars = 0;
 
-                        // katmanlý mimari  migration yaparken  package manager alanýnda  default proje   project context olduðu yer start set projede  baðlantý bilgilerinin olduðu bu proje olmalý
+                        // katmanlÃ½ mimari  migration yaparken  package manager alanÃ½nda  default proje   project context olduÃ°u yer start set projede  baÃ°lantÃ½ bilgilerinin olduÃ°u bu proje olmalÃ½
 
 
                     }
@@ -72,7 +72,7 @@ namespace Proje_web
             services.AddControllers()
            .AddJsonOptions(options =>
            {
-               options.JsonSerializerOptions.PropertyNamingPolicy = null; // C# ve JSON property isimlerinin eþleþmesi için
+               options.JsonSerializerOptions.PropertyNamingPolicy = null; // C# ve JSON property isimlerinin eÃ¾leÃ¾mesi iÃ§in
            });
 
 
@@ -102,12 +102,12 @@ namespace Proje_web
                 opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(opt =>
             {
-                opt.SaveToken = true;  //saklansýn,
+                opt.SaveToken = true;  //saklansÃ½n,
                 opt.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 {
-                    ValidateIssuerSigningKey = true, // farklý algoritma dönüþebilsin mi evet
+                    ValidateIssuerSigningKey = true, // farklÃ½ algoritma dÃ¶nÃ¼Ã¾ebilsin mi evet
                     IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateAudience = false,  //alýnan token kendine has olsun baþkalarýyla paylaþýlmasýn
+                    ValidateAudience = false,  //alÃ½nan token kendine has olsun baÃ¾kalarÃ½yla paylaÃ¾Ã½lmasÃ½n
                     ValidateIssuer = false ,
                     ValidateLifetime = true,
                 };
@@ -135,13 +135,13 @@ namespace Proje_web
 
             app.UseAuthentication();
 
-            app.UseCors("AllowLocalhost5173");
+            app.UseCors("AllowLocalhost5175");
 
 
             app.UseEndpoints(endpoints =>
             {
 
-                //localhost/----areaname----/controllername/actionname/paramtere þeklilnde arealar olmalý 
+                //localhost/----areaname----/controllername/actionname/paramtere Ã¾eklilnde arealar olmalÃ½ 
 
                 endpoints.MapControllerRoute(name: "area", pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
