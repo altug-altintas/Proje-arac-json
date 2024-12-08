@@ -15,6 +15,7 @@ using Proje_web.Areas.Member.Models.VMs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Security.Claims;
 
 namespace Proje_web.Areas.Member.Controllers
 {
@@ -50,7 +51,9 @@ namespace Proje_web.Areas.Member.Controllers
 
         public async Task<IActionResult> CreateIslem()
         {
-            AppUser appUser = await _userManager.GetUserAsync(User);
+            // AppUser appUser = await _userManager.GetUserAsync(User);
+            var userId = User.FindFirstValue(ClaimTypes.Name);
+            var appUser = await _userManager.FindByIdAsync(userId);
             var firmaSahisler = _firmaSahis.GetDefaults(x => x.Statu != Statu.Passive && x.AppUserID == appUser.Id);
             ViewBag.FirmaSahisler = firmaSahisler ?? new List<FirmaSahis>();
 
@@ -67,7 +70,9 @@ namespace Proje_web.Areas.Member.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateIslem([FromBody] CreateislemDto dto)
         {
-            AppUser appUser = await _userManager.GetUserAsync(User);
+            // AppUser appUser = await _userManager.GetUserAsync(User);
+            var userId = User.FindFirstValue(ClaimTypes.Name);
+            var appUser = await _userManager.FindByIdAsync(userId);
             if (ModelState.IsValid)
             {
                 islem islem = _mapper.Map<islem>(dto);
@@ -83,7 +88,9 @@ namespace Proje_web.Areas.Member.Controllers
 
         public async Task<IActionResult> GetAraclarByFirmaSahis(int? firmaSahisId)  //sağlıklı çalışıyor
         {
-            AppUser appUser = await _userManager.GetUserAsync(User);
+            //AppUser appUser = await _userManager.GetUserAsync(User);
+            var userId = User.FindFirstValue(ClaimTypes.Name);
+            var appUser = await _userManager.FindByIdAsync(userId);
             var araclar = firmaSahisId.HasValue
                 ? _aracRepo.GetDefaults(x => x.FirmaSahisId == firmaSahisId.Value && x.Statu != Statu.Passive && x.AppUserID == appUser.Id)
                 : _aracRepo.GetDefaults(x => x.Statu != Statu.Passive);
@@ -141,7 +148,9 @@ namespace Proje_web.Areas.Member.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveIslemD([FromBody] islemDDto dto)
         {
-            AppUser appUser = await _userManager.GetUserAsync(User);
+            // AppUser appUser = await _userManager.GetUserAsync(User);
+            var userId = User.FindFirstValue(ClaimTypes.Name);
+            var appUser = await _userManager.FindByIdAsync(userId);
             if (ModelState.IsValid)
             {
                 var islemD = _mapper.Map<islemD>(dto);
@@ -188,7 +197,11 @@ namespace Proje_web.Areas.Member.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateIslemD([FromBody] UpdateIslemDto dTO)
         {
-            AppUser appUser = await _userManager.GetUserAsync(User);
+            var userId = User.FindFirstValue(ClaimTypes.Name);
+            var appUser = await _userManager.FindByIdAsync(userId);
+
+
+            // AppUser appUser = await _userManager.GetUserAsync(User);
             if (ModelState.IsValid)
             {
                 islemD islemD = _islemDRepo.GetDefault(a => a.ID == dTO.ID);
@@ -208,7 +221,8 @@ namespace Proje_web.Areas.Member.Controllers
 
         public IActionResult ListIslemD()
         {
-            AppUser appUser = _userManager.GetUserAsync(User).Result;
+            //AppUser appUser = _userManager.GetUserAsync(User).Result;
+            var userId = User.FindFirstValue(ClaimTypes.Name);
 
             // Modeli doldurma
             var islemDList = _islemDRepo.GetByDefaults(
@@ -226,7 +240,7 @@ namespace Proje_web.Areas.Member.Controllers
                     AracPlaka = x.Arac.Plaka,
                     FirmaAd = x.FirmaSahis.Adi
                 },
-                expression: x => x.Statu == Statu.Active && x.AppUserID == appUser.Id,
+                expression: x => x.Statu == Statu.Active && x.AppUserID == userId,
                 include: q => q.Include(x => x.Arac)
                                 .Include(x => x.FirmaSahis)
             );
@@ -268,9 +282,11 @@ namespace Proje_web.Areas.Member.Controllers
 
         public async Task<IActionResult> GetisLemler(int islemId)
         {
-            AppUser appUser = await _userManager.GetUserAsync(User);
+            var userId = User.FindFirstValue(ClaimTypes.Name);
 
-            var list = _islemDRepo.GetDefaults(a => a.Statu == Statu.Active && a.IslemId == islemId && a.AppUserID == appUser.Id);
+           // AppUser appUser = await _userManager.GetUserAsync(User);
+
+            var list = _islemDRepo.GetDefaults(a => a.Statu == Statu.Active && a.IslemId == islemId && a.AppUserID == userId);
 
             return Json(list);
         }

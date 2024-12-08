@@ -74,8 +74,10 @@ namespace Proje_web.Areas.Member.Controllers
         {
             if (ModelState.IsValid && dTO.Image != null)
             {
+                var userId = User.FindFirstValue(ClaimTypes.Name);
+                var appUser = await _userManager.FindByIdAsync(userId);
 
-                AppUser appUser = await _userManager.GetUserAsync(User);  //kullanıcı bilgileri
+               // AppUser appUser = await _userManager.GetUserAsync(User);  //kullanıcı bilgileri
 
                 string currentUserEmail = appUser.Email;
                 string currentUSer = appUser.UserName;
@@ -125,7 +127,12 @@ namespace Proje_web.Areas.Member.Controllers
 
             else
             {
-                AppUser appUser = await _userManager.GetUserAsync(User);
+
+                var userId = User.FindFirstValue(ClaimTypes.Name);
+
+
+                var appUser = await _userManager.FindByIdAsync(userId);
+                //AppUser appUser = await _userManager.GetUserAsync(User);
 
                 string currentUserEmail = appUser.Email;
                 string currentUSer = appUser.UserName;
@@ -165,7 +172,13 @@ namespace Proje_web.Areas.Member.Controllers
 
         public async Task<IActionResult> Delete()
         {
-            var appUser = await _userManager.GetUserAsync(User);
+          //  var appUser = await _userManager.GetUserAsync(User);
+            var userId = User.FindFirstValue(ClaimTypes.Name);
+
+          
+
+
+            var appUser = await _userManager.FindByIdAsync(userId);
 
             await _userRepo.Delete(appUser);
 

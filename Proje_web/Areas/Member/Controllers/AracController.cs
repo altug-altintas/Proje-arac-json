@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Security.Claims;
 
 namespace Proje_web.Areas.Member.Controllers
 {
@@ -47,7 +48,9 @@ namespace Proje_web.Areas.Member.Controllers
 
         public async Task<IActionResult> CreateArac()
         {
-            AppUser appUser = await _userManager.GetUserAsync(User);
+            //AppUser appUser = await _userManager.GetUserAsync(User);
+            var userId = User.FindFirstValue(ClaimTypes.Name);
+            var appUser = await _userManager.FindByIdAsync(userId);
 
 
 
@@ -68,7 +71,9 @@ namespace Proje_web.Areas.Member.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateArac(AracCreateDTO dto)
         {
-            AppUser appUser = await _userManager.GetUserAsync(User);
+            //AppUser appUser = await _userManager.GetUserAsync(User);
+            var userId = User.FindFirstValue(ClaimTypes.Name);
+            var appUser = await _userManager.FindByIdAsync(userId);
             if (ModelState.IsValid)
             {
 
@@ -88,7 +93,9 @@ namespace Proje_web.Areas.Member.Controllers
 
         public async Task<IActionResult> AracList(int? firmaSahisId)
         {
-            AppUser appUser = await _userManager.GetUserAsync(User);
+            // AppUser appUser = await _userManager.GetUserAsync(User);
+            var userId = User.FindFirstValue(ClaimTypes.Name);
+            var appUser = await _userManager.FindByIdAsync(userId);
 
             // Kullanıcının sahip olduğu FirmaSahis listesini al
             ViewBag.FirmaSahisler = (_firmaSahis.GetDefaults(x => x.Statu != Statu.Passive && x.AppUserID == appUser.Id))

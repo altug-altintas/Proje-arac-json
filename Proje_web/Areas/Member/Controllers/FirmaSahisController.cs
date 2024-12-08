@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Security.Claims;
 
 namespace Proje_web.Areas.Member.Controllers
 {
@@ -40,7 +41,9 @@ namespace Proje_web.Areas.Member.Controllers
 
         public async Task<IActionResult> Create()
         {
-            AppUser appUser = await _userManager.GetUserAsync(User);
+            //AppUser appUser = await _userManager.GetUserAsync(User);
+            var userId = User.FindFirstValue(ClaimTypes.Name);
+            var appUser = await _userManager.FindByIdAsync(userId);
 
             var viewModel = new FirmaSahisCreateDTO
             {
@@ -64,7 +67,9 @@ namespace Proje_web.Areas.Member.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(FirmaSahisCreateDTO vM)
         {
-            AppUser appUser = await _userManager.GetUserAsync(User);
+            //  AppUser appUser = await _userManager.GetUserAsync(User);
+            var userId = User.FindFirstValue(ClaimTypes.Name);
+            var appUser = await _userManager.FindByIdAsync(userId);
             if (ModelState.IsValid)
             {
                 var firmaSahis = _mapper.Map<FirmaSahis>(vM);
@@ -83,7 +88,9 @@ namespace Proje_web.Areas.Member.Controllers
 
         public async Task<IActionResult> GetFirmaSahisList()
         {
-            AppUser appUser = await _userManager.GetUserAsync(User);
+            // AppUser appUser = await _userManager.GetUserAsync(User);
+            var userId = User.FindFirstValue(ClaimTypes.Name);
+            var appUser = await _userManager.FindByIdAsync(userId);
 
             var ulkeler = _ulkeRepository.GetDefaults(x => x.Statu == Statu.Active);
             var sehirler = _sehirRepository.GetDefaults(x => x.Statu == Statu.Active);
