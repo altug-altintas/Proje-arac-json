@@ -65,7 +65,7 @@ namespace Proje_web.Areas.Member.Controllers
 
         }
         [HttpPost]
-        public async Task<IActionResult> Create(FirmaSahisCreateDTO vM)
+        public async Task<IActionResult> Create([FromBody] FirmaSahisCreateDTO vM)
         {
             //  AppUser appUser = await _userManager.GetUserAsync(User);
             var userId = User.FindFirstValue(ClaimTypes.Name);
@@ -191,7 +191,7 @@ namespace Proje_web.Areas.Member.Controllers
         }
 
         [HttpPost]
-        public IActionResult FirmaUpdate(FirmaSahisUpdateDTO vM)
+        public IActionResult FirmaUpdate([FromBody] FirmaSahisUpdateDTO vM)
         {
 
 
