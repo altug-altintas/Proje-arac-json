@@ -56,10 +56,10 @@ namespace Proje_web.Controllers
                 {
                     AppUser appUser = _mapper.Map<AppUser>(dTO);
 
-                   // var image = Image.Load(dTO.Image.OpenReadStream());
-                 //   image.Mutate(a => a.Resize(70, 70));
-                 //   image.Save($"wwwroot/Resimler/{appUser.UserName}.jpg");
-                  //  appUser.ImagePath = $"/Resimler/{appUser.UserName}.jpg";
+                   var image = Image.Load(dTO.Image.OpenReadStream());
+                   image.Mutate(a => a.Resize(70, 70));
+                    image.Save($"wwwroot/Resimler/{appUser.UserName}.jpg");
+                    appUser.ImagePath = $"/Resimler/{appUser.UserName}.jpg";
 
                     await _userRepo.Create(appUser);
                     return Json(new { success = true, redirectUrl = Url.Action("Login") });
