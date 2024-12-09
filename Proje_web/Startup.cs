@@ -12,10 +12,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -37,83 +33,71 @@ namespace Proje_web
         {
             services.AddControllersWithViews();
 
+            // CORS Policy tanımı
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowLocalhost5175", builder =>
+                options.AddPolicy("AllowAll", builder =>
                 {
-                    builder.WithOrigins("http://localhost:5175")
+                    builder.WithOrigins("http://localhost:5173") // Buraya izin vermek istediğiniz origin'leri ekleyin
                            .AllowAnyMethod()
                            .AllowAnyHeader()
-                           .AllowCredentials();
+                           .AllowCredentials(); // Cookie tabanlı oturumlar için gerekli
                 });
             });
 
-
+            // Veritabanı ve kimlik doğrulama servisleri
             services.AddDbContext<ProjectContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("Default")));
-            services.AddIdentity<AppUser, IdentityRole>
-                (
-                    x =>
+            services.AddIdentity<AppUser, IdentityRole>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+                options.Password.RequiredLength = 4;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequiredUniqueChars = 0;
+            })
+            .AddEntityFrameworkStores<ProjectContext>()
+            .AddDefaultTokenProviders();
+
+            // JWT Ayarları
+            var appSettingSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingSection);
+            var appSettings = appSettingSection.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettings.SecretKey);
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        x.User.RequireUniqueEmail = true;    //kiþiye ait mail adresi eþsiz olcak 
-                        x.Password.RequiredLength = 4;    // þifre karakter sayýsý
-                        x.Password.RequireLowercase = false;   // küçük harf zorunluluðu olsun olmasýn
-                        x.Password.RequireUppercase = false;   // büyük harf zorlunluðu olsun olmasn
-                        x.Password.RequireNonAlphanumeric = false;   // þifrede örneðin !, @, #, $, vb. gibi özel karakterler olsun olmasýn
-                        x.Password.RequireDigit = false;    // en az bir sayý olsun olmasn
-                        x.Password.RequiredUniqueChars = 0;
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                    };
+                });
 
-                        // katmanlý mimari  migration yaparken  package manager alanýnda  default proje   project context olduðu yer start set projede  baðlantý bilgilerinin olduðu bu proje olmalý
+            services.AddAuthorization();
 
-
-                    }
-
-                ).AddEntityFrameworkStores<ProjectContext>().AddDefaultTokenProviders();
-
-            services.AddControllers()
-           .AddJsonOptions(options =>
-           {
-               options.JsonSerializerOptions.PropertyNamingPolicy = null; // C# ve JSON property isimlerinin eþleþmesi için
-           });
-
-
+            // AutoMapper ve Repository'ler
             services.AddAutoMapper(typeof(Mappers));
-            services.AddScoped<IAppUserRepo, AppUserRepo>();          
-            services.AddScoped(typeof(IBaseRepo<>), typeof(BaseRepo<>));           
+            services.AddScoped<IAppUserRepo, AppUserRepo>();
+            services.AddScoped(typeof(IBaseRepo<>), typeof(BaseRepo<>));
             services.AddScoped<IPasswordHasher<AppUser>, PasswordHasher<AppUser>>();
             services.AddScoped<IFirmaSahisRepo, FirmaSahisRepo>();
             services.AddScoped<IIslemRepo, IslemRepo>();
             services.AddScoped<IIslemDRepo, IslemDRepo>();
             services.AddScoped<IAracRepo, AracRepo>();
 
-
-
-
-
-          //  services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
-
-            var appSettingSection = Configuration.GetSection("AppSettings");
-            services.Configure<AppSettings>(appSettingSection);
-
-            var appSettings = appSettingSection.Get<AppSettings>();
-            var key = Encoding.ASCII.GetBytes(appSettings.SecretKey);
-            services.AddAuthentication(opt =>
-            {
-                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(opt =>
-            {
-                opt.SaveToken = true;  //saklansýn,
-                opt.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true, // farklý algoritma dönüþebilsin mi evet
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateAudience = false,  //alýnan token kendine has olsun baþkalarýyla paylaþýlmasýn
-                    ValidateIssuer = false ,
-                    ValidateLifetime = true,
-                };
-            });
-            services.AddAuthorization();
-
+            // JSON Ayarları
+            services.AddControllers()
+               .AddJsonOptions(options =>
+               {
+                   options.JsonSerializerOptions.PropertyNamingPolicy = null;
+               });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -127,28 +111,25 @@ namespace Proje_web
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-            app.UseStaticFiles();
 
+            app.UseStaticFiles();
             app.UseRouting();
 
-            app.UseAuthorization();
+            // CORS Middleware sırası
+            app.UseCors("AllowAll");
 
             app.UseAuthentication();
-
-            app.UseCors("AllowLocalhost5175");
-
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-
-                //localhost/----areaname----/controllername/actionname/paramtere þeklilnde arealar olmalý 
-
-                endpoints.MapControllerRoute(name: "area", pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(
+                    name: "area",
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-
             });
         }
     }
