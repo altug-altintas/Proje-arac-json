@@ -30,7 +30,7 @@ namespace Proje_web.Models.DTOs
         public string Email { get; set; }
 
        
-        [Required(ErrorMessage = "Bu alanboş bırakılamaz")]
+        //[Required(ErrorMessage = "Bu alanboş bırakılamaz")]
         [NotMapped]    //maplama eşleştirme yapma
         public IFormFile Image { get; set; }
        
