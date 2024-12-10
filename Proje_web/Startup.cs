@@ -36,7 +36,7 @@ namespace Proje_web
             // CORS Policy tanımı
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAll", builder =>
+                options.AddPolicy("AllowLocalhost5173", builder =>
                 {
                     builder.WithOrigins("http://localhost:5173") // Buraya izin vermek istediğiniz origin'leri ekleyin
                            .AllowAnyMethod()
@@ -116,7 +116,7 @@ namespace Proje_web
             app.UseRouting();
 
             // CORS Middleware sırası
-            app.UseCors("AllowAll");
+            app.UseCors("AllowLocalhost5173");
 
             app.UseAuthentication();
             app.UseAuthorization();
