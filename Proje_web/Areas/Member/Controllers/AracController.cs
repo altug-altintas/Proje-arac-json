@@ -140,6 +140,60 @@ namespace Proje_web.Areas.Member.Controllers
 
             _aracRepo.Active(arac);
             return Json(new { success = true });
-        }  
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UpdateArac(int id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.Name);
+            var appUser = await _userManager.FindByIdAsync(userId);
+
+            var arac = await _aracRepo.GetByIdAsync(id);
+
+            if (arac == null || arac.AppUserID != appUser.Id)
+            {
+                return NotFound("Araç bulunamadı veya yetkiniz yok.");
+            }
+
+            var viewModel = _mapper.Map<AracUpdateDTO>(arac);
+            viewModel.FirmaSahisId = arac.FirmaSahisId;
+            viewModel.FirmaSahisler = _firmaSahis.GetDefaults(x => x.Statu != Statu.Passive && x.AppUserID == appUser.Id)
+                .Select(fs => new SelectListItem
+                {
+                    Value = fs.ID.ToString(),
+                    Text = fs.Adi
+                }).ToList();
+
+            return Json(viewModel);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateArac(AracUpdateDTO dto)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.Name);
+            var appUser = await _userManager.FindByIdAsync(userId);
+
+            if (ModelState.IsValid)
+            {
+                var arac = await _aracRepo.GetByIdAsync(dto.ID);
+                if (arac == null || arac.AppUserID != appUser.Id)
+                {
+                    return NotFound("Araç bulunamadı veya yetkiniz yok.");
+                }
+                arac.FirmaSahisId = dto.FirmaSahisId;
+                _mapper.Map(dto, arac);
+                arac.AppUserID = appUser.Id;
+                _aracRepo.Update(arac);
+                return RedirectToAction("AracList");
+            }
+            dto.FirmaSahisler = _firmaSahis.GetDefaults(x => x.Statu != Statu.Passive && x.AppUserID == appUser.Id)
+                .Select(fs => new SelectListItem
+                {
+                    Value = fs.ID.ToString(),
+                    Text = fs.Adi
+                }).ToList();
+
+            return Json(dto);
+        }
+
     }
 }
