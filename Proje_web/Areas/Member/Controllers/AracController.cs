@@ -89,15 +89,12 @@ namespace Proje_web.Areas.Member.Controllers
             ViewBag.FirmaSahisler = _firmaSahis.GetDefaults(x => x.Statu != Statu.Passive && x.AppUserID == appUser.Id);
             return Json(dto);
         }
-
-
+        [HttpGet]
         public async Task<IActionResult> AracList(int? firmaSahisId)
         {
-            // AppUser appUser = await _userManager.GetUserAsync(User);
             var userId = User.FindFirstValue(ClaimTypes.Name);
             var appUser = await _userManager.FindByIdAsync(userId);
 
-            // Kullanıcının sahip olduğu FirmaSahis listesini al
             ViewBag.FirmaSahisler = (_firmaSahis.GetDefaults(x => x.Statu != Statu.Passive && x.AppUserID == appUser.Id))
                 .Select(fs => new SelectListItem
                 {
@@ -105,13 +102,53 @@ namespace Proje_web.Areas.Member.Controllers
                     Text = fs.Adi
                 }).ToList();
 
-            // Araçları filtrele
             var list = firmaSahisId.HasValue
-                ? _aracRepo.GetDefaults(x => x.FirmaSahisId == firmaSahisId.Value || x.Statu != Statu.Passive && x.AppUserID == appUser.Id)
-                : _aracRepo.GetDefaults(x => x.AppUserID == appUser.Id && x.Statu != Statu.Passive);
+                ? _aracRepo.GetDefaults(x => x.FirmaSahisId == firmaSahisId.Value && x.Statu != Statu.Passive && x.AppUserID == appUser.Id)
+                    .Select(arac => new
+                    {
+                        arac.ID,
+                        arac.Plaka,
+                        arac.Marka,
+                        arac.Model,
+                        arac.Yil,
+                        arac.SasiNo,
+                        arac.YakitTur,
+                        arac.Renk,
+                        arac.BakimKM,
+                        arac.MotorHacim,
+                        arac.MotorBeygir,
+                        arac.Km,
+                        arac.SonBakim,
+                        arac.SiradakiBakim,
+                        arac.AppUserID,
+                        arac.FirmaSahisId,
+                        FirmaAdi = arac.FirmaSahis != null ? arac.FirmaSahis.Adi : null 
+                    }).ToList()
+                : _aracRepo.GetDefaults(x => x.AppUserID == appUser.Id && x.Statu != Statu.Passive)
+                    .Select(arac => new
+                    {
+                        arac.ID,
+                        arac.Plaka,
+                        arac.Marka,
+                        arac.Model,
+                        arac.Yil,
+                        arac.SasiNo,
+                        arac.YakitTur,
+                        arac.Renk,
+                        arac.BakimKM,
+                        arac.MotorHacim,
+                        arac.MotorBeygir,
+                        arac.Km,
+                        arac.SonBakim,
+                        arac.SiradakiBakim,
+                        arac.AppUserID,
+                        arac.FirmaSahisId,
+                        FirmaAdi = arac.FirmaSahis != null ? arac.FirmaSahis.Adi : null
+                    }).ToList();
 
             return Json(list);
         }
+
 
 
 
