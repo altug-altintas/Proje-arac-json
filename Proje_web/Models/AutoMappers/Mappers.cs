@@ -32,6 +32,8 @@ namespace Proje_web.Models.AutoMappers
             CreateMap<Areas.Admin.Models.DTOs.FirmaSahisCreateDTO, FirmaSahis>().ReverseMap();
             CreateMap<Areas.Member.Models.DTOs.FirmaSahisCreateDTO, FirmaSahis>().ReverseMap();
 
+         CreateMap<Areas.Member.Models.VMs.isLemNewDTO, isLemNew>().ReverseMap();
+
 
             CreateMap<Areas.Admin.Models.DTOs.FirmaSahisUpdateDTO, FirmaSahis>().ReverseMap();
             CreateMap<Areas.Member.Models.DTOs.FirmaSahisUpdateDTO, FirmaSahis>().ReverseMap();

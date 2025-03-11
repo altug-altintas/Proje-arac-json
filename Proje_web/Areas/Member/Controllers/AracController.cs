@@ -13,10 +13,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Proje_web.Areas.Member.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Area("Member")]
     public class AracController : Controller
     {
@@ -81,7 +82,7 @@ namespace Proje_web.Areas.Member.Controllers
                 arac.AppUserID = appUser.Id;
                 _aracRepo.Create(arac);
 
-               // return RedirectToAction("AracList");
+                // return RedirectToAction("AracList");
                 return Json(new { success = true, redirectUrl = Url.Action("AracList") });
 
             }
@@ -122,7 +123,7 @@ namespace Proje_web.Areas.Member.Controllers
                         arac.SiradakiBakim,
                         arac.AppUserID,
                         arac.FirmaSahisId,
-                        FirmaAdi = arac.FirmaSahis != null ? arac.FirmaSahis.Adi : null 
+                        FirmaAdi = arac.FirmaSahis != null ? arac.FirmaSahis.Adi : null
                     }).ToList()
                 : _aracRepo.GetDefaults(x => x.AppUserID == appUser.Id && x.Statu != Statu.Passive)
                     .Select(arac => new
@@ -154,7 +155,7 @@ namespace Proje_web.Areas.Member.Controllers
 
         [HttpPost]
         public IActionResult AracPasif([FromBody] int ID)
-        {          
+        {
 
             var arac = _aracRepo.GetDefault(a => a.ID == ID);
             if (arac == null)
@@ -164,10 +165,10 @@ namespace Proje_web.Areas.Member.Controllers
 
             _aracRepo.Delete(arac);
             return Json(new { success = true });
-        }   
-         [HttpPost]
+        }
+        [HttpPost]
         public IActionResult AracAktif([FromBody] int ID)
-        {          
+        {
 
             var arac = _aracRepo.GetDefault(a => a.ID == ID);
             if (arac == null)
@@ -232,5 +233,45 @@ namespace Proje_web.Areas.Member.Controllers
             return Json(dto);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> AracListeWithId(int id)
+        {   
+            var userId = User.FindFirstValue(ClaimTypes.Name);
+            var appUser = await _userManager.FindByIdAsync(userId);
+
+            var araclar = _aracRepo.GetByDefaults(
+                                                 selector: a => new
+                                                 {
+                                                     a,
+                                                     FirmaSahis = a.FirmaSahis != null ? new
+                                                     {
+                                                         a.FirmaSahis.Adi,
+                                                     } : null
+                                                 },
+                                                 expression: a => a.ID == id && a.Statu != Statu.Passive && a.AppUserID == appUser.Id,
+                                                 include: a=> a.Include(a=> a.FirmaSahis).Include(a => a.AppUser)
+                                                 );
+            return Json(araclar);
+        }
+        [HttpGet]
+        public async Task<IActionResult> AracListe()
+        {    
+            var userId = User.FindFirstValue(ClaimTypes.Name);
+            var appUser = await _userManager.FindByIdAsync(userId);
+
+            var araclar = _aracRepo.GetByDefaults(
+                                                 selector: a => new
+                                                 {
+                                                     a,
+                                                     FirmaSahis = a.FirmaSahis != null ? new
+                                                     {
+                                                         a.FirmaSahis.Adi,
+                                                     } : null
+                                                 },
+                                                 expression: a => a.Statu != Statu.Passive && a.AppUserID == appUser.Id,
+                                                 include: a => a.Include(a => a.FirmaSahis).Include(a => a.AppUser)
+                                                 );
+            return Json(araclar);
+        }
     }
 }

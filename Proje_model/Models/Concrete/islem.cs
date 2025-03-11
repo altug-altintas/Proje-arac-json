@@ -11,7 +11,6 @@ namespace Proje_model.Models.Concrete
         public string No { get; set; }
         public int FirmaSahisId { get; set; }
         public DateTime Tarih { get; set; }
-
         public string AppUserID { get; set; }   // idendtiy  küpüphanesinden olduğu için  int değil string aldık
         public AppUser AppUser { get; set; }
 

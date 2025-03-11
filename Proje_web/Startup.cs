@@ -91,12 +91,14 @@ namespace Proje_web
             services.AddScoped<IIslemRepo, IslemRepo>();
             services.AddScoped<IIslemDRepo, IslemDRepo>();
             services.AddScoped<IAracRepo, AracRepo>();
+            services.AddScoped<IisLemNewRepo, isLemNewRepo>();
 
             // JSON Ayarları
             services.AddControllers()
                .AddJsonOptions(options =>
                {
                    options.JsonSerializerOptions.PropertyNamingPolicy = null;
+                   options.JsonSerializerOptions.IgnoreNullValues = true;
                });
         }
 

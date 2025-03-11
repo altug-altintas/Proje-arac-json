@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Proje_model.Models.Concrete
 {
@@ -23,14 +24,19 @@ namespace Proje_model.Models.Concrete
         public DateTime SiradakiBakim { get; set; }
 
         public string AppUserID { get; set; }   // idendtiy  küpüphanesinden olduğu için  int değil string aldık
+        [JsonIgnore]
         public AppUser AppUser { get; set; }
 
 
-        public int FirmaSahisId { get; set; } 
+        public int FirmaSahisId { get; set; }
 
         // Nav prop
+        [JsonIgnore]
         public FirmaSahis FirmaSahis { get; set; }
-        public ICollection<islemD> IslemDetaylar { get; set; }
+        [JsonIgnore]
+        public ICollection<islemD> IslemDetaylar { get; set; }  =   new List<islemD>();
+        [JsonIgnore]
+        public ICollection<isLemNew> isLemNews { get; set; }  =   new List<isLemNew>();
 
 
 
