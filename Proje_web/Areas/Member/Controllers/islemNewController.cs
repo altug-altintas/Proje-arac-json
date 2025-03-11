@@ -55,7 +55,6 @@ namespace Proje_web.Areas.Member.Controllers
             islem.AppUserID = _dto.AppUserID; 
             islem.No = _isLemNewRepo.GetNextFisNo();
 
-            //üst eşleştir
             List<islemD> islemDList = new List<islemD>();
             int sira = 0;
             foreach (islemNewDetailDTO item in _dto.Detaylar)
@@ -71,9 +70,7 @@ namespace Proje_web.Areas.Member.Controllers
                 islemDNew.BakimKM = item.BakimKM;
                 islemDNew.FirmaSahisId = item.FirmaSahisId;
                 islemDNew.AracId = item.AracId;
-                ////// detay eşleştir
-                /// islemDNew.sira =sira;
-                /// 
+               
                 islemDList.Add(islemDNew);
             }
             _isLemNewRepo.islemSaveWithDetails(islem, islemDList);

@@ -248,7 +248,7 @@ namespace Proje_web.Areas.Member.Controllers
                                                          a.FirmaSahis.Adi,
                                                      } : null
                                                  },
-                                                 expression: a => a.ID == id && a.Statu != Statu.Passive && a.AppUserID == appUser.Id,
+                                                 expression: a => a.FirmaSahisId == id && a.Statu != Statu.Passive && a.AppUserID == appUser.Id,
                                                  include: a=> a.Include(a=> a.FirmaSahis).Include(a => a.AppUser)
                                                  );
             return Json(araclar);

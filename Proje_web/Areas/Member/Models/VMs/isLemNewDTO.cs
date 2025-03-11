@@ -9,7 +9,6 @@ namespace Proje_web.Areas.Member.Models.VMs
         public int FirmaSahisId { get; set; }
         public string AppUserID { get; set; }
         public int Yil { get; set; }
-        public int No { get; set; }
         public DateTime Tarih { get; set; }
        
 
