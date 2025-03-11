@@ -50,13 +50,11 @@ namespace Proje_web.Areas.Member.Controllers
             islem islem = new islem();
             islem.FirmaSahisId = _dto.FirmaSahisId;
             islem.Yil = _dto.Yil;
-            islem.AppUserID = _dto.AppUserID;
             islem.Tarih = _dto.Tarih;
             islem.AppUserID = _dto.AppUserID; 
             islem.No = _isLemNewRepo.GetNextFisNo();
 
             List<islemD> islemDList = new List<islemD>();
-            int sira = 0;
             foreach (islemNewDetailDTO item in _dto.Detaylar)
             {
                 islemD islemDNew = new islemD();
