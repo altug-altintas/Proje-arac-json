@@ -16,7 +16,7 @@ namespace Proje_model.Models.Concrete
 
         // Nav prop
 
-        public FirmaSahis FirmaSahis { get; set; }
+        public FirmaSahis? FirmaSahis { get; set; }
         public ICollection<islemD> IslemDetaylar { get; set; }
     }
 }

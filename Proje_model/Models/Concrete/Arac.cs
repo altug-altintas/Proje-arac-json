@@ -32,13 +32,10 @@ namespace Proje_model.Models.Concrete
 
         // Nav prop
         [JsonIgnore]
-        public FirmaSahis FirmaSahis { get; set; }
+        public FirmaSahis? FirmaSahis { get; set; }
         [JsonIgnore]
         public ICollection<islemD> IslemDetaylar { get; set; }  =   new List<islemD>();
-        [JsonIgnore]
-        public ICollection<isLemNew> isLemNews { get; set; }  =   new List<isLemNew>();
-
-
-
+        
+      
     }
 }

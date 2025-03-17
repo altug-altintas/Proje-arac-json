@@ -5,7 +5,6 @@ namespace Proje_web.Areas.Member.Models.VMs
 {
     public class isLemNewDTO
     {
-        public int AracId { get; set; }
         public int FirmaSahisId { get; set; }
         public string AppUserID { get; set; }
         public int Yil { get; set; }

@@ -36,8 +36,15 @@ namespace Proje_Dal.Repositories.Concrete
             try
             {
                 _context.Islemler.Add(islem);
+                _context.SaveChanges();
+
+                foreach (var item in islemDList)
+                {
+                    item.IslemId = islem.ID;
+                }
+
                 _context.IslemDetaylar.AddRange(islemDList);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
             }
             catch (Exception ex)
             {

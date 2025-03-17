@@ -46,7 +46,8 @@ namespace Proje_web
             });
 
             // Veritabanı ve kimlik doğrulama servisleri
-            services.AddDbContext<ProjectContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("Default")));
+            services.AddDbContext<ProjectContext>(opt =>
+            opt.UseNpgsql(Configuration.GetConnectionString("Default")));
             services.AddIdentity<AppUser, IdentityRole>(options =>
             {
                 options.User.RequireUniqueEmail = true;

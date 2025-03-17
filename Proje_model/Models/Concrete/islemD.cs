@@ -29,10 +29,10 @@ namespace Proje_model.Models.Concrete
         public islem islem { get; set; }
 
         public int FirmaSahisId { get; set; }
-        public FirmaSahis FirmaSahis { get; set; }
+        public FirmaSahis? FirmaSahis { get; set; }
 
         public int AracId { get; set; }
-        public Arac Arac { get; set; }
+        public Arac? Arac { get; set; }
 
     }
 }

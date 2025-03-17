@@ -8,12 +8,16 @@
   <ItemGroup>
     <Compile Remove="Areas\Admin\Data\**" />
     <Compile Remove="Areas\Member\Data\**" />
+    <Compile Remove="Models\VMs\**" />
     <Content Remove="Areas\Admin\Data\**" />
     <Content Remove="Areas\Member\Data\**" />
+    <Content Remove="Models\VMs\**" />
     <EmbeddedResource Remove="Areas\Admin\Data\**" />
     <EmbeddedResource Remove="Areas\Member\Data\**" />
+    <EmbeddedResource Remove="Models\VMs\**" />
     <None Remove="Areas\Admin\Data\**" />
     <None Remove="Areas\Member\Data\**" />
+    <None Remove="Models\VMs\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,7 +45,6 @@
     <Folder Include="Areas\Admin\Views\Shared\Components\" />
     <Folder Include="Areas\Member\Views\Shared\Components\" />
     <Folder Include="Areas\Member\Views\Users\" />
-    <Folder Include="Models\VMs\" />
     <Folder Include="Views\Shared\Components\" />
     <Folder Include="wwwroot\Resimler\" />
   </ItemGroup>

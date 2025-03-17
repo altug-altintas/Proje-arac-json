@@ -22,7 +22,6 @@ namespace Proje_Dal.Context
         public DbSet<Arac> Araclar { get; set; }
         public DbSet<islem> Islemler { get; set; }
         public DbSet<islemD> IslemDetaylar { get; set; } 
-        public DbSet<isLemNew> isLemNews { get; set; }
 
 
 
@@ -36,7 +35,6 @@ namespace Proje_Dal.Context
             modelBuilder.ApplyConfiguration(new AracMap());
             modelBuilder.ApplyConfiguration(new islemMap());
             modelBuilder.ApplyConfiguration(new islemDMap());
-            modelBuilder.ApplyConfiguration(new isLemNewMap());
             base.OnModelCreating(modelBuilder);
 
         }

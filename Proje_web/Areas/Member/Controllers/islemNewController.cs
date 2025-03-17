@@ -45,34 +45,44 @@ namespace Proje_web.Areas.Member.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> islemKayit(isLemNewDTO _dto)
+        public async Task<IActionResult> islemKayit([FromBody]isLemNewDTO _dto)
         {
-            islem islem = new islem();
-            islem.FirmaSahisId = _dto.FirmaSahisId;
-            islem.Yil = _dto.Yil;
-            islem.Tarih = _dto.Tarih;
-            islem.AppUserID = _dto.AppUserID; 
-            islem.No = _isLemNewRepo.GetNextFisNo();
-
-            List<islemD> islemDList = new List<islemD>();
-            foreach (islemNewDetailDTO item in _dto.Detaylar)
+            if (ModelState.IsValid)
             {
-                islemD islemDNew = new islemD();
-                islemDNew.islemTur = item.islemTur;
-                islemDNew.islemAciklama = item.islemAciklama;
-                islemDNew.MalzemeFiyat = item.MalzemeFiyat;
-                islemDNew.IscilikFiyat = item.iscilikFiyat;
-                islemDNew.ToplamFiyat = item.ToplamFiyat;                 
-                islemDNew.AppUserID =item.AppUserID;
-                islemDNew.IslemId =islem.ID; 
-                islemDNew.BakimKM = item.BakimKM;
-                islemDNew.FirmaSahisId = item.FirmaSahisId;
-                islemDNew.AracId = item.AracId;
-               
-                islemDList.Add(islemDNew);
+                islem islem = new islem();
+                islem.FirmaSahisId = _dto.FirmaSahisId;
+                islem.Yil = _dto.Yil;
+                islem.Tarih = _dto.Tarih;
+                islem.AppUserID = _dto.AppUserID;
+                islem.No = _isLemNewRepo.GetNextFisNo();
+                islem.Statu = Statu.Active;
+
+                List<islemD> islemDList = new List<islemD>();
+                foreach (islemNewDetailDTO item in _dto.Detaylar)
+                {
+                    islemD islemDNew = new islemD();
+                    islemDNew.islemTur = item.islemTur;
+                    islemDNew.islemAciklama = item.islemAciklama;
+                    islemDNew.MalzemeFiyat = item.MalzemeFiyat;
+                    islemDNew.IscilikFiyat = item.iscilikFiyat;
+                    islemDNew.ToplamFiyat = item.ToplamFiyat;
+                    islemDNew.AppUserID = item.AppUserID;
+                    islemDNew.IslemId = islem.ID;
+                    islemDNew.BakimKM = item.BakimKM;
+                    islemDNew.FirmaSahisId = item.FirmaSahisId;
+                    islemDNew.AracId = item.AracId;
+
+                    islemDList.Add(islemDNew);
+                }
+                _isLemNewRepo.islemSaveWithDetails(islem, islemDList);
+            
+                return Json("ok");
             }
-            _isLemNewRepo.islemSaveWithDetails(islem, islemDList);
-            return Json("ok");
+            else
+            {
+                return BadRequest(ModelState);
+            }
+           
         }
 
 
