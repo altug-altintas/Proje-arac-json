@@ -234,12 +234,13 @@ namespace Proje_web.Areas.Member.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AracListeWithId(int id)
+        public async Task<IActionResult> AracListeWithPlakaOrFirma(string searchplakaorfirma)
         {   
             var userId = User.FindFirstValue(ClaimTypes.Name);
             var appUser = await _userManager.FindByIdAsync(userId);
-
-            var araclar = _aracRepo.GetByDefaults(
+            try
+            {
+                var araclar = _aracRepo.GetByDefaults(
                                                  selector: a => new
                                                  {
                                                      a,
@@ -248,11 +249,49 @@ namespace Proje_web.Areas.Member.Controllers
                                                          a.FirmaSahis.Adi,
                                                      } : null
                                                  },
-                                                 expression: a => a.FirmaSahisId == id && a.Statu != Statu.Passive && a.AppUserID == appUser.Id,
-                                                 include: a=> a.Include(a=> a.FirmaSahis).Include(a => a.AppUser)
+                                                 expression: a => (a.Plaka.Contains(searchplakaorfirma) || a.SasiNo.Contains(searchplakaorfirma)) && a.Statu != Statu.Passive && a.AppUserID == appUser.Id,
+                                                 include: a => a.Include(a => a.FirmaSahis).Include(a => a.AppUser)
                                                  );
-            return Json(araclar);
+                return Json(araclar);
+
+            }
+            catch (System.Exception ex)
+            {
+
+                return Json(ex.Message, "Plakaya Ait Araç Bulunamadı");
+                ;
+            }
+            
         }
+        [HttpGet]
+        public async Task<IActionResult> AracListeWithFirmaSahisAd(string FirmaSahisAd)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.Name);
+            var appUser = await _userManager.FindByIdAsync(userId);
+            try
+            {
+                var araclar = _aracRepo.GetByDefaults(
+                                                  selector: a => new
+                                                  {
+                                                      a,
+                                                      FirmaSahis = a.FirmaSahis != null ? new
+                                                      {
+                                                          a.FirmaSahis.Adi,
+                                                      } : null
+                                                  },
+                                                  expression: a => a.FirmaSahis.Adi.Contains(FirmaSahisAd) && a.Statu != Statu.Passive && a.AppUserID == appUser.Id,
+                                                  include: a => a.Include(a => a.FirmaSahis).Include(a => a.AppUser)
+                                                  );
+                return Json(araclar);
+            }
+            catch (System.Exception ex)
+            {
+
+                return Json(ex.Message, "Firma Yada Firmaya Ait Araç Bulunamadı");
+            }    
+           
+        }
+
         [HttpGet]
         public async Task<IActionResult> AracListe()
         {    

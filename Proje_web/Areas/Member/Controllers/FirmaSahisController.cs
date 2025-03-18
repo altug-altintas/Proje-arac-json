@@ -171,7 +171,28 @@ namespace Proje_web.Areas.Member.Controllers
             return Ok(cities);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetFirmaWithAd(string Firmaad)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.Name);
+            var appUser = await _userManager.FindByIdAsync(userId);
+            try
+            {
+                 var firmaSahis = _firmaSahis.GetByDefaults(
+                selector: x=>x,
+             
+                expression: x => x.Statu == Statu.Active && x.Adi.Contains(Firmaad) && x.AppUserID == appUser.Id);
+                return Json(firmaSahis);
+            }
+            catch (System.Exception ex)
+            {
 
+                return Json(ex.Message,"Firma Bulunamadı");
+            }
+         
+
+          
+        }
         public IActionResult FirmaUpdate(int id)
         {
 

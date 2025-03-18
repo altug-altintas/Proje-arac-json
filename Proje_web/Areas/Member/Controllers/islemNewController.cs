@@ -11,6 +11,7 @@ using Proje_model.Models.Concrete;
 using Proje_model.Models.Enums;
 using Proje_web.Areas.Member.Models.VMs;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -75,14 +76,34 @@ namespace Proje_web.Areas.Member.Controllers
                     islemDList.Add(islemDNew);
                 }
                 _isLemNewRepo.islemSaveWithDetails(islem, islemDList);
-            
-                return Json("ok");
+
+                return Json(new { success = true, redirectUrl = Url.Action("GetIslemDetailsById/"+islem.ID) });
             }
             else
             {
                 return BadRequest(ModelState);
             }
            
+        }
+        [HttpGet]
+        public IActionResult GetIslemDetailsById(int islemId)
+        {
+            var islem = _project.IslemDetaylar
+                .Where(i => i.IslemId == islemId)
+                .Select(i => new
+                {
+                    i.MalzemeFiyat,
+                    i.IscilikFiyat,
+                    i.ToplamFiyat,
+                    i.islemAciklama,
+                    i.islemTur,
+                    i.BakimKM,
+                    Plaka = i.Arac.Plaka,
+                    AracId = i.Arac.ID
+                })
+                .FirstOrDefault();
+
+            return Ok(islem);
         }
 
 
